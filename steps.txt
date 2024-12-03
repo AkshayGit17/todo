@@ -1,0 +1,13 @@
+1.App cleanup 
+2.Firebase setup 
+    Console 
+        - create project
+        - project overview -> project seetings -> web app 
+    Local 
+        - install firebase 
+        - firebaseConfig.ts 
+            - use config, initialize the app, export db 
+
+3.Authentication 
+    - Build -> Authentication -> Get started 
+    - Google -> Enable -> Project’s Support Email -> Save
