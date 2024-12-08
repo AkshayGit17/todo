@@ -1,11 +1,8 @@
-import './App.css';
+import "./App.css";
+import Auth from "./pages/Auth/Auth";
 
 function App() {
-  return (
-    <div className="App">
-      <h1>Todo App</h1>
-    </div>
-  );
+  return <Auth />;
 }
 
 export default App;

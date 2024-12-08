@@ -11,3 +11,12 @@
 3.Authentication 
     - Build -> Authentication -> Get started 
     - Google -> Enable -> Project’s Support Email -> Save
+
+4.Firebase & Auth configurations 
+    - firebaseConfig.ts 
+    - services -> auth.ts 
+    - context -> AuthContext.tsx 
+    - index.tsx 
+
+5.Tailwind configurations
+

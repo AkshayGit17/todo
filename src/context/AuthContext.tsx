@@ -1,10 +1,11 @@
-import React, { createContext, useState } from "react";
-import { User } from "firebase/auth";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { onAuthStateChanged, User } from "firebase/auth";
 import {
   logInWithEmailAndPassword,
   signOutUser,
   signUpWithEmailAndPassword,
 } from "../services/auth";
+import { auth } from "../firebaseConfig";
 
 interface AuthContextProps {
   user: User | null;
@@ -21,6 +22,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const signUp = async (email: string, password: string) => {
     try {
@@ -56,4 +65,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+
+  return context;
 };

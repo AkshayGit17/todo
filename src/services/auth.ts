@@ -39,6 +39,10 @@ export const signOutUser = async (): Promise<void> => {
   try {
     await signOut(auth);
   } catch (error) {
-    console.log("Error signing out", error);
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error("Failed to sign out.");
+    }
   }
 };
