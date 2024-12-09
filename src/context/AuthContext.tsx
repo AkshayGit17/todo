@@ -10,9 +10,9 @@ import { auth } from "../firebaseConfig";
 interface AuthContextProps {
   user: User | null;
   error: string | null;
-  signUp: (email: string, password: string) => Promise<void>;
-  signIn: (email: string, password: string) => Promise<void>;
-  signOut: () => Promise<void>;
+  signUp: (email: string, password: string) => Promise<boolean>;
+  signIn: (email: string, password: string) => Promise<boolean>;
+  signOut: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -35,9 +35,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       await signUpWithEmailAndPassword(email, password);
       setError(null);
+      return true;
     } catch (err) {
       const error = err as Error;
       setError(error.message);
+      return false;
     }
   };
 
@@ -45,18 +47,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       await logInWithEmailAndPassword(email, password);
       setError(null);
+      return true;
     } catch (err) {
       const error = err as Error;
       setError(error.message);
+      return false;
     }
   };
   const signOut = async () => {
     try {
       await signOutUser();
       setError(null);
+      return true;
     } catch (err) {
       const error = err as Error;
       setError(error.message);
+      return false;
     }
   };
 
