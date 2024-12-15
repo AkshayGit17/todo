@@ -1,9 +1,8 @@
 import { Navigate, Route, Routes } from "react-router";
 import "./App.css";
-import Auth from "./pages/Auth/Auth";
-import React from "react";
+import Auth from "./pages/Auth/AuthPage";
 import { useAuth } from "./context/AuthContext";
-import Todos from "./pages/Todos/Todos";
+import Todos from "./pages/Todos/TodosPage";
 
 const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({
   children,
