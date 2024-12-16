@@ -1,15 +1,10 @@
 import { useState } from "react";
 import { Todo } from "../../types/todo";
 import AddTodo from "./components/AddTodo/AddTodo";
+import useTodo from "../../hooks/useTodo";
 
 const Todos = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [newTodo, setNewTodo] = useState("");
-
-  const addTodo = async (text: string) => {
-    const newTodo = { id: new Date().toString(), text, completed: false };
-    setTodos((todos) => [...todos, newTodo]);
-  };
+  const { todos, loading, error, addTodo, deleteTodo, toggleTodo } = useTodo();
 
   return (
     <div className="p-6">
