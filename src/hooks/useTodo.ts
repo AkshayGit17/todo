@@ -64,8 +64,7 @@ const useTodo = () => {
     const newTodo = { text, completed: false };
 
     try {
-      const docRef = await addDoc(userTodoCollection, newTodo);
-      setTodos((todos) => [...todos, { id: docRef.id, ...newTodo }]);
+      await addDoc(userTodoCollection, newTodo);
     } catch (error) {
       setError("Failed to add todo");
     }
@@ -82,7 +81,6 @@ const useTodo = () => {
 
     try {
       await deleteDoc(docRef);
-      setTodos((todos) => todos.filter((todo) => todo.id !== id));
     } catch (error) {
       setError("Failed to delete todo");
     }
@@ -99,15 +97,36 @@ const useTodo = () => {
 
     try {
       await updateDoc(docRef, { completed });
-      setTodos((todos) =>
-        todos.map((todo) => (todo.id === id ? { ...todo, completed } : todo))
-      );
     } catch (error) {
-      setError("Failed to update todo");
+      setError("Failed to toggle todo");
     }
   };
 
-  return { todos, loading, error, addTodo, deleteTodo, toggleTodo };
+  const updateTodoText = async (id: string, text: string) => {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      setError("User not authenticated");
+      return;
+    }
+
+    const docRef = doc(db, "users", currentUser.uid, "todos", id);
+
+    try {
+      await updateDoc(docRef, { text });
+    } catch (error) {
+      setError("Failed to update todo text");
+    }
+  };
+
+  return {
+    todos,
+    loading,
+    error,
+    addTodo,
+    deleteTodo,
+    toggleTodo,
+    updateTodoText,
+  };
 };
 
 export default useTodo;
