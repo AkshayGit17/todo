@@ -38,6 +38,7 @@ const useTodo = () => {
           ...(doc.data() as Omit<Todo, "id">),
         }));
         setTodos(fetchedTodos);
+        setLoading(false);
       },
       (err) => {
         setError(err.message);

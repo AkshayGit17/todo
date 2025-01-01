@@ -23,7 +23,7 @@ const TodoList = ({ todos, onDelete, onToggle, onUpdate }: TodoListProps) => {
               type="checkbox"
               checked={todo.completed}
               onChange={() => onToggle(todo.id, !todo.completed)}
-              className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring focus:ring-blue-300"
+              className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring focus:ring-blue-300 cursor-pointer"
             />
             {todo.completed ? (
               <span className="line-through text-gray-500">{todo.text}</span>

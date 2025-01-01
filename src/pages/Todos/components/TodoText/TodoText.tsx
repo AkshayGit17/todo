@@ -31,7 +31,7 @@ const TodoText = ({ todo, onUpdate }: TodoTextProps) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleBlur();
-    } else if (e.key === "Esc") {
+    } else if (e.key === "Escape") {
       setEditText(text);
       setIsEditing(false);
     }
@@ -50,9 +50,7 @@ const TodoText = ({ todo, onUpdate }: TodoTextProps) => {
           className="w-full px-2 py-1 border rounded focus:outline-none focus:ring focus:ring-blue-300"
         />
       ) : (
-        <span onClick={handleTextClick} className="cursor-pointer">
-          {text}
-        </span>
+        <span onClick={handleTextClick}>{text}</span>
       )}
     </div>
   );
