@@ -33,7 +33,7 @@ const Todos = () => {
   }
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-6 space-y-8">
+    <main className="max-w-4xl mx-auto p-6 space-y-8">
       <header className="text-center">
         <h1 className="text-3xl font-bold">Todos</h1>
       </header>

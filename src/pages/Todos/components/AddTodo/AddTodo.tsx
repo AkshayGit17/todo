@@ -21,17 +21,17 @@ const AddTodo = ({ onAdd }: { onAdd: (text: string) => Promise<void> }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center space-x-2">
+    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white shadow rounded-md">
       <input
         type="text"
         value={todoText}
         onChange={(e) => setTodoText(e.target.value)}
         placeholder="New Todo"
-        className="w-4/5 py-2 px-4 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+        className="flex-grow p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <button
         type="submit"
-        className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        className="ml-2 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         {isSubmitting ? "Adding..." : "Add"}
       </button>
