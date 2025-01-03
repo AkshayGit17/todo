@@ -12,18 +12,18 @@ interface TodoListProps {
 
 const TodoList = ({ todos, onDelete, onToggle, onUpdate }: TodoListProps) => {
   return (
-    <ul className="space-y-2">
+    <ul>
       {todos.map((todo) => (
         <li
           key={todo.id}
-          className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+          className="flex justify-between items-center p-4 bg-white border border-gray-300 rounded-lg shadow-sm"
         >
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
             <input
               type="checkbox"
               checked={todo.completed}
               onChange={() => onToggle(todo.id, !todo.completed)}
-              className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring focus:ring-blue-300 cursor-pointer"
+              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
             />
             {todo.completed ? (
               <span className="line-through text-gray-500">{todo.text}</span>
@@ -33,7 +33,7 @@ const TodoList = ({ todos, onDelete, onToggle, onUpdate }: TodoListProps) => {
           </div>
           <TrashIcon
             onClick={() => onDelete(todo.id)}
-            className="w-6 h-6 text-red-500 cursor-pointer hover:text-red-700"
+            className="h-5 w-5 text-red-500 cursor-pointer hover:text-red-700"
           />
         </li>
       ))}

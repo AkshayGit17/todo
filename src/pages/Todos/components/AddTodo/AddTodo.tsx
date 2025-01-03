@@ -21,7 +21,10 @@ const AddTodo = ({ onAdd }: { onAdd: (text: string) => Promise<void> }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white shadow rounded-md">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white shadow rounded-md"
+    >
       <input
         type="text"
         value={todoText}
