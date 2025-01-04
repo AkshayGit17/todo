@@ -16,7 +16,7 @@ const TodoList = ({ todos, onDelete, onToggle, onUpdate }: TodoListProps) => {
       {todos.map((todo) => (
         <li
           key={todo.id}
-          className="flex justify-between items-center p-4 bg-white border border-gray-300 rounded-lg shadow-sm"
+          className="flex justify-between items-center p-4 mt-2 bg-white border border-gray-300 rounded-lg shadow-sm"
         >
           <div className="flex items-center space-x-3">
             <input
