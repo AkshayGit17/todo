@@ -1,6 +1,7 @@
 import AddTodo from "./components/AddTodo/AddTodo";
 import TodoList from "./components/TodoList/TodoList";
 import useTodo from "../../hooks/useTodo";
+import { useAuth } from "../../context/AuthContext";
 
 const Todos = () => {
   const {
@@ -12,6 +13,8 @@ const Todos = () => {
     toggleTodo,
     updateTodoText,
   } = useTodo();
+
+  const { signOut, error: authError } = useAuth();
 
   const activeTodos = todos.filter((todo) => !todo.completed);
   const completedTodos = todos.filter((todo) => todo.completed);
@@ -32,10 +35,20 @@ const Todos = () => {
     );
   }
 
+  const handleLogout = async () => {
+    await signOut();
+  };
+
   return (
     <main className="max-w-4xl mx-auto p-6 space-y-8">
-      <header className="text-center">
+      <header className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Todos</h1>
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Logout
+        </button>
       </header>
       <section>
         <AddTodo onAdd={addTodo} />
