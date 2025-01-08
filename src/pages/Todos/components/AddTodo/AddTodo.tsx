@@ -29,12 +29,16 @@ const AddTodo = ({ onAdd }: { onAdd: (text: string) => Promise<void> }) => {
         type="text"
         value={todoText}
         onChange={(e) => setTodoText(e.target.value)}
+        disabled={isSubmitting}
         placeholder="New Todo"
         className="flex-grow p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <button
         type="submit"
-        className="ml-2 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className={`ml-2 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+          isSubmitting ? "cursor-not-allowed" : ""
+        }`}
+        disabled={isSubmitting}
       >
         {isSubmitting ? "Adding..." : "Add"}
       </button>
