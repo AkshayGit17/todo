@@ -11,9 +11,12 @@ interface TodoListProps {
 }
 
 const TodoList = ({ todos, onDelete, onToggle, onUpdate }: TodoListProps) => {
+  const activeTodos = todos.filter((todo) => !todo.completed);
+  const completedTodos = todos.filter((todo) => todo.completed);
+
   return (
-    <ul>
-      {todos.map((todo) => (
+    <ul className="scrollbar max-h-[24rem] overflow-scroll">
+      {[...activeTodos, ...completedTodos].map((todo) => (
         <li
           key={todo.id}
           className="flex justify-between items-center p-4 mt-2 bg-white border border-gray-300 rounded-lg shadow-sm"

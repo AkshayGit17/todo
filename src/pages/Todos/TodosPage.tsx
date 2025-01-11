@@ -16,9 +16,6 @@ const Todos = () => {
 
   const { signOut, error: authError } = useAuth();
 
-  const activeTodos = todos.filter((todo) => !todo.completed);
-  const completedTodos = todos.filter((todo) => todo.completed);
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -41,11 +38,11 @@ const Todos = () => {
 
   return (
     <>
-      <header className="grid grid-cols-3">
-        <h1 className="col-span-2 text-3xl font-bold">Todos</h1>
+      <header className="relative p-4">
+        <h1 className="text-3xl font-bold text-center">Todos</h1>
         <button
           onClick={handleLogout}
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded absolute top-4 right-4"
         >
           Logout
         </button>
@@ -56,13 +53,7 @@ const Todos = () => {
         </section>
         <section>
           <TodoList
-            todos={activeTodos}
-            onDelete={deleteTodo}
-            onToggle={toggleTodo}
-            onUpdate={updateTodoText}
-          />
-          <TodoList
-            todos={completedTodos}
+            todos={todos}
             onDelete={deleteTodo}
             onToggle={toggleTodo}
             onUpdate={updateTodoText}
