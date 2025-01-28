@@ -2,7 +2,7 @@
 2.Firebase setup 
     Console 
         - create project
-        - project overview -> project seetings -> web app 
+        - project overview -> project settings -> web app 
     Local 
         - install firebase 
         - firebaseConfig.ts 
