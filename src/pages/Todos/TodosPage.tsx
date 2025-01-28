@@ -14,7 +14,7 @@ const Todos = () => {
     updateTodoText,
   } = useTodo();
 
-  const { signOut, error: authError } = useAuth();
+  const { signOut } = useAuth();
 
   if (loading) {
     return (
