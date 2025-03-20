@@ -1,4 +1,4 @@
-1.App cleanup 
+1.App creation & cleanup 
 2.Firebase setup 
     Console 
         - create project

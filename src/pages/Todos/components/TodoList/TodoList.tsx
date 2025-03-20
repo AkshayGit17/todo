@@ -1,16 +1,62 @@
+import { useEffect, useState } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
 import { TrashIcon } from "@heroicons/react/24/outline";
 
+import { auth, db } from "../../../../firebaseConfig";
 import { Todo } from "../../../../types/todo";
 import TodoText from "../TodoText/TodoText";
+import { deleteTodo, toggleTodo } from "../../../../services/todo";
 
-interface TodoListProps {
-  todos: Todo[];
-  onDelete: (id: string) => Promise<void>;
-  onToggle: (id: string, completed: boolean) => Promise<void>;
-  onUpdate: (id: string, text: string) => Promise<void>;
-}
+const TodoList = () => {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
 
-const TodoList = ({ todos, onDelete, onToggle, onUpdate }: TodoListProps) => {
+  useEffect(() => {
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+      setError('User not authenticated!!');
+      return;
+    }
+    const todosCollection = collection(db, 'users', currentUser.uid, 'todos');
+    const unsubscribe = onSnapshot(todosCollection, (snapshot) => {
+      const fetchedTodos = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as Todo));
+      setLoading(false);
+      setTodos(fetchedTodos);
+    }, err => {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Failed to fetch todos.');
+      }
+      setTodos([]);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center">
+        <p className="text-lg font-semibold text-gray-700">Loading...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center">
+        <p className="text-lg font-semibold text-red-500">Error: {error}</p>
+      </div>
+    );
+  }
+
+
   const activeTodos = todos.filter((todo) => !todo.completed);
   const completedTodos = todos.filter((todo) => todo.completed);
 
@@ -25,17 +71,17 @@ const TodoList = ({ todos, onDelete, onToggle, onUpdate }: TodoListProps) => {
             <input
               type="checkbox"
               checked={todo.completed}
-              onChange={() => onToggle(todo.id, !todo.completed)}
+              onChange={() => toggleTodo(todo.id, !todo.completed)}
               className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
             />
             {todo.completed ? (
               <span className="line-through text-gray-500">{todo.text}</span>
             ) : (
-              <TodoText todo={todo} onUpdate={onUpdate} />
+              <TodoText todo={todo} />
             )}
           </div>
           <TrashIcon
-            onClick={() => onDelete(todo.id)}
+            onClick={() => deleteTodo(todo.id)}
             className="h-5 w-5 text-red-500 cursor-pointer hover:text-red-700"
           />
         </li>

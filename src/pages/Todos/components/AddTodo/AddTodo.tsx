@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { addTodo } from "../../../../services/todo";
 
-const AddTodo = ({ onAdd }: { onAdd: (text: string) => Promise<void> }) => {
+const AddTodo = () => {
   const [todoText, setTodoText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -11,7 +12,7 @@ const AddTodo = ({ onAdd }: { onAdd: (text: string) => Promise<void> }) => {
     setIsSubmitting(true);
     try {
       await new Promise((res) => setTimeout(() => res(""), 3000));
-      await onAdd(todoText);
+      await addTodo(todoText);
       setTodoText("");
     } catch (error) {
       console.log("Error adding todo", error);

@@ -4,6 +4,8 @@ import "./index.css";
 import App from "./App";
 import { AuthProvider } from "./context/AuthContext";
 import { BrowserRouter } from "react-router";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -13,6 +15,7 @@ root.render(
     <AuthProvider>
       <BrowserRouter>
         <App />
+        <ToastContainer />
       </BrowserRouter>
     </AuthProvider>
   </React.StrictMode>

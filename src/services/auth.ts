@@ -2,15 +2,16 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  UserCredential,
 } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
 export const signUpWithEmailAndPassword = async (
   email: string,
   password: string
-): Promise<void> => {
+): Promise<UserCredential> => {
   try {
-    await createUserWithEmailAndPassword(auth, email, password);
+    return await createUserWithEmailAndPassword(auth, email, password);
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(error.message);
@@ -23,9 +24,9 @@ export const signUpWithEmailAndPassword = async (
 export const logInWithEmailAndPassword = async (
   email: string,
   password: string
-): Promise<void> => {
+): Promise<UserCredential> => {
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    return await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(error.message);

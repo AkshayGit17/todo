@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { onAuthStateChanged, User, UserCredential } from "firebase/auth";
 import {
   logInWithEmailAndPassword,
   signOutUser,
@@ -9,10 +9,9 @@ import { auth } from "../firebaseConfig";
 
 interface AuthContextProps {
   user: User | null;
-  error: string | null;
-  signUp: (email: string, password: string) => Promise<boolean>;
-  signIn: (email: string, password: string) => Promise<boolean>;
-  signOut: () => Promise<boolean>;
+  signUp: (email: string, password: string) => Promise<{ data: UserCredential | null , errorMessage: string | null, success: boolean }>;
+  signIn: (email: string, password: string) => Promise<{ data: UserCredential | null , errorMessage: string | null, success: boolean }>;
+  signOut: () => Promise<{ errorMessage: string | null, success: boolean }>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -21,7 +20,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -35,41 +33,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const signUp = async (email: string, password: string) => {
     try {
-      await signUpWithEmailAndPassword(email, password);
-      setError(null);
-      return true;
+      const userCredential = await signUpWithEmailAndPassword(email, password);
+      return { data: userCredential, errorMessage: null, success: true};
     } catch (err) {
       const error = err as Error;
-      setError(error.message);
-      return false;
+      return { data: null, errorMessage: error.message, success: false };
     }
   };
 
   const signIn = async (email: string, password: string) => {
     try {
-      await logInWithEmailAndPassword(email, password);
-      setError(null);
-      return true;
+      const userCredential = await logInWithEmailAndPassword(email, password);
+      return { data: userCredential, errorMessage: null, success: true};
     } catch (err) {
       const error = err as Error;
-      setError(error.message);
-      return false;
+      return { data: null, errorMessage: error.message, success: false };
     }
   };
   const signOut = async () => {
     try {
       await signOutUser();
-      setError(null);
-      return true;
+      return { errorMessage: null, success: true };
     } catch (err) {
       const error = err as Error;
-      setError(error.message);
-      return false;
+      return { errorMessage: error.message, success: false };
+
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, error, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, signUp, signIn, signOut }}>
       {!loading && children}
     </AuthContext.Provider>
   );

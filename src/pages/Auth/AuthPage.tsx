@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import { UserCredential } from "firebase/auth";
+import { toast } from "react-toastify";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 import { useAuth } from "../../context/AuthContext";
 
+interface AuthResponse {
+  data: UserCredential | null , 
+  errorMessage: string | null, 
+  success: boolean
+}
+
 const Auth = () => {
-  const { signUp, signIn, error } = useAuth();
+  const { signUp, signIn } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -14,17 +22,25 @@ const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
 
   const handleAuth = async (e: React.FormEvent) => {
-    let success = null;
+    let data: AuthResponse;
     e.preventDefault();
 
     if (isSignUp) {
-      success = await signUp(email, password);
+      data = await signUp(email, password);
     } else {
-      success = await signIn(email, password);
+      data = await signIn(email, password);
     }
 
-    if (success) {
-      navigate("/todos");
+    if (data.success) {
+      toast.success(`${isSignUp ? 'Signup successful!' : 'Login successful!'}`, {
+        position: 'top-right',
+        autoClose: 1500,
+      });
+      setTimeout(() => {
+        navigate("/todos");
+      }, 1500);
+    } else {
+      toast.error(`${data.errorMessage}`);
     }
   };
 
@@ -38,7 +54,6 @@ const Auth = () => {
         <h1 className="text-2xl font-bold text-center mb-6">
           {isSignUp ? "Sign Up" : "Sign In"}
         </h1>
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleAuth}>
           <input
             type="email"

@@ -1,39 +1,18 @@
 import AddTodo from "./components/AddTodo/AddTodo";
 import TodoList from "./components/TodoList/TodoList";
-import useTodo from "../../hooks/useTodo";
 import { useAuth } from "../../context/AuthContext";
+import { toast } from "react-toastify";
 
 const Todos = () => {
-  const {
-    todos,
-    loading,
-    error,
-    addTodo,
-    deleteTodo,
-    toggleTodo,
-    updateTodoText,
-  } = useTodo();
-
   const { signOut } = useAuth();
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-lg font-semibold text-gray-700">Loading...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-lg font-semibold text-red-500">Error: {error}</p>
-      </div>
-    );
-  }
-
   const handleLogout = async () => {
-    await signOut();
+    const data = await signOut();
+
+    toast.info(`${data.success ? 'You have been logged out.' : data.errorMessage}`, {
+      position: 'top-right',
+      autoClose: 1500,
+    });
   };
 
   return (
@@ -49,15 +28,10 @@ const Todos = () => {
       </header>
       <main className="max-w-4xl mx-auto p-6 space-y-8">
         <section>
-          <AddTodo onAdd={addTodo} />
+          <AddTodo />
         </section>
         <section>
-          <TodoList
-            todos={todos}
-            onDelete={deleteTodo}
-            onToggle={toggleTodo}
-            onUpdate={updateTodoText}
-          />
+          <TodoList />
         </section>
       </main>
     </>

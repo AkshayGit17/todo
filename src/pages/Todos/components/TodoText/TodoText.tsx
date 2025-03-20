@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Todo } from "../../../../types/todo";
+import { updateTodoText } from "../../../../services/todo";
 
 interface TodoTextProps {
   todo: Todo;
-  onUpdate: (id: string, text: string) => Promise<void>;
 }
 
-const TodoText = ({ todo, onUpdate }: TodoTextProps) => {
+const TodoText = ({ todo }: TodoTextProps) => {
   const { id, text } = todo;
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(text);
@@ -19,9 +19,9 @@ const TodoText = ({ todo, onUpdate }: TodoTextProps) => {
     setEditText(e.target.value);
   };
 
-  const handleBlur = () => {
+  const handleBlur = async () => {
     if (editText.trim() !== "") {
-      onUpdate(id, editText);
+      await updateTodoText(id, editText);
     } else {
       setEditText(text);
     }
