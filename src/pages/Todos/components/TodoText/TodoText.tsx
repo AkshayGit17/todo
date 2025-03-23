@@ -3,17 +3,20 @@ import { Todo } from "../../../../types/todo";
 import { updateTodoText } from "../../../../services/todo";
 
 interface TodoTextProps {
+  isEditing: boolean;
+  enableEdit: (id: string) => void;
+  cancelEdit: (id: string) => void;
   todo: Todo;
 }
 
-const TodoText = ({ todo }: TodoTextProps) => {
+const TodoText = ({
+  isEditing,
+  enableEdit,
+  cancelEdit,
+  todo,
+}: TodoTextProps) => {
   const { id, text } = todo;
-  const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(text);
-
-  const handleTextClick = () => {
-    setIsEditing(true);
-  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditText(e.target.value);
@@ -25,7 +28,7 @@ const TodoText = ({ todo }: TodoTextProps) => {
     } else {
       setEditText(text);
     }
-    setIsEditing(false);
+    cancelEdit(id);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -33,7 +36,7 @@ const TodoText = ({ todo }: TodoTextProps) => {
       handleBlur();
     } else if (e.key === "Escape") {
       setEditText(text);
-      setIsEditing(false);
+      cancelEdit(id);
     }
   };
 
@@ -50,7 +53,7 @@ const TodoText = ({ todo }: TodoTextProps) => {
           className="w-full px-2 py-1 border rounded focus:outline-none focus:ring focus:ring-blue-300"
         />
       ) : (
-        <span onClick={handleTextClick}>{text}</span>
+        <span onClick={() => enableEdit(id)}>{text}</span>
       )}
     </div>
   );

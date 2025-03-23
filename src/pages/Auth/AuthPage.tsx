@@ -5,11 +5,12 @@ import { toast } from "react-toastify";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 import { useAuth } from "../../context/AuthContext";
+import { displayToast } from "../../utils";
 
 interface AuthResponse {
-  data: UserCredential | null , 
-  errorMessage: string | null, 
-  success: boolean
+  data: UserCredential | null;
+  errorMessage: string | null;
+  success: boolean;
 }
 
 const Auth = () => {
@@ -32,15 +33,15 @@ const Auth = () => {
     }
 
     if (data.success) {
-      toast.success(`${isSignUp ? 'Signup successful!' : 'Login successful!'}`, {
-        position: 'top-right',
-        autoClose: 1500,
+      displayToast({
+        message: `${isSignUp ? "Signup successful!" : "Login successful!"}`,
+        type: "success",
       });
       setTimeout(() => {
         navigate("/todos");
       }, 1500);
     } else {
-      toast.error(`${data.errorMessage}`);
+      displayToast({ message: `${data.errorMessage}`, type: "error" });
     }
   };
 

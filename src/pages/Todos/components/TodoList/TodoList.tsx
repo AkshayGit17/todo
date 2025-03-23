@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 
 import { auth, db } from "../../../../firebaseConfig";
 import { Todo } from "../../../../types/todo";
@@ -9,33 +9,54 @@ import { deleteTodo, toggleTodo } from "../../../../services/todo";
 
 const TodoList = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const [editingTodoIds, setEditingTodoIds] = useState<string[]>([]);
+
+  const enableEdit = (id: string) => {
+    setEditingTodoIds((editingTodoIds) =>
+      editingTodoIds.includes(id) ? editingTodoIds : [...editingTodoIds, id]
+    );
+  };
+
+  const cancelEdit = (id: string) => {
+    setEditingTodoIds((editingTodoIds) =>
+      editingTodoIds.filter((todId) => todId !== id)
+    );
+  };
 
   useEffect(() => {
     const currentUser = auth.currentUser;
 
     if (!currentUser) {
-      setError('User not authenticated!!');
+      setError("User not authenticated!!");
       return;
     }
-    const todosCollection = collection(db, 'users', currentUser.uid, 'todos');
-    const unsubscribe = onSnapshot(todosCollection, (snapshot) => {
-      const fetchedTodos = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as Todo));
-      setLoading(false);
-      setTodos(fetchedTodos);
-    }, err => {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Failed to fetch todos.');
+    const todosCollection = collection(db, "users", currentUser.uid, "todos");
+    const unsubscribe = onSnapshot(
+      todosCollection,
+      (snapshot) => {
+        const fetchedTodos = snapshot.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            } as Todo)
+        );
+        setLoading(false);
+        setTodos(fetchedTodos);
+      },
+      (err) => {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Failed to fetch todos.");
+        }
+        setTodos([]);
+        setLoading(false);
       }
-      setTodos([]);
-      setLoading(false);
-    });
+    );
 
     return () => unsubscribe();
   }, []);
@@ -55,7 +76,6 @@ const TodoList = () => {
       </div>
     );
   }
-
 
   const activeTodos = todos.filter((todo) => !todo.completed);
   const completedTodos = todos.filter((todo) => todo.completed);
@@ -77,13 +97,26 @@ const TodoList = () => {
             {todo.completed ? (
               <span className="line-through text-gray-500">{todo.text}</span>
             ) : (
-              <TodoText todo={todo} />
+              <TodoText
+                isEditing={editingTodoIds.includes(todo.id)}
+                todo={todo}
+                enableEdit={enableEdit}
+                cancelEdit={cancelEdit}
+              />
             )}
           </div>
-          <TrashIcon
-            onClick={() => deleteTodo(todo.id)}
-            className="h-5 w-5 text-red-500 cursor-pointer hover:text-red-700"
-          />
+          <div className="flex gap-2">
+            {!editingTodoIds.includes(todo.id) && !todo.completed && (
+              <PencilSquareIcon
+                onClick={() => enableEdit(todo.id)}
+                className="h-5 w-5 text-red-500 cursor-pointer hover:text-red-700"
+              />
+            )}
+            <TrashIcon
+              onClick={() => deleteTodo(todo.id)}
+              className="h-5 w-5 text-red-500 cursor-pointer hover:text-red-700"
+            />
+          </div>
         </li>
       ))}
     </ul>
