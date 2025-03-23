@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { UserCredential } from "firebase/auth";
-import { toast } from "react-toastify";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 import { useAuth } from "../../context/AuthContext";
